@@ -5,14 +5,23 @@
     <!-- Simulierte Webseite -->
     <div class="website-preview">
       <div class="webpage-frame">
+        <p class="scenario-description">
+          In diesem Test kombinierst du alle gelernten Aspekte: Struktur, Alternativtexte, ARIA und Kontrast.
+        </p>
+        <!-- DEINE VERÄNDERUNGEN VON HIER -->
         <h3>Start</h3>
         <h5>Falscher Sprung</h5>
 
-        <!-- <img src="/logo.png" alt="" /> -->
+        <img src="../assets/cat_caviar.jpg" />
 
-        <p style="color: lightgray; background: white">
+        <p id="contrast-text" style="color: lightgray; background: white">
           Dieser Text ist schwer lesbar.
         </p>
+
+        <button id="action-button"></button>
+
+        <input type="text" id="email" placeholder="E-Mail" />
+        <!-- BIS HIER -->
       </div>
     </div>
 
@@ -50,46 +59,77 @@ function contrast(rgb1, rgb2) {
 
 function checkFix() {
   messages.value = [];
-  let scoreSum = 0;
+  let score = 100;
 
-  // Überschriften-Hierarchie prüfen
+  // Überschriftenhierarchie prüfen
   const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
   let lastLevel = 0;
   let validOrder = true;
   headings.forEach(h => {
     const level = parseInt(h.tagName[1]);
-    if (level - lastLevel > 1) validOrder = false;
+    if (lastLevel !== 0 && level - lastLevel > 1) validOrder = false;
     lastLevel = level;
   });
 
-  if (validOrder) {
-    scoreSum += 33;
-  } else {
-    messages.value.push('Die Überschriften sollten eine logische Reihenfolge haben (z. B. h1 > h2 > h3).');
+  if (!validOrder) {
+    score -= 20;
+    messages.value.push(
+      `Die Überschriften folgen keiner logischen Reihenfolge (z. B. h3 direkt vor h5). ` +
+      `Strukturiere deine Inhalte hierarchisch mit aufsteigenden Ebenen wie h2 > h3 > h4.`
+    );
   }
 
   // Alt-Text prüfen
   const img = document.querySelector('img');
-  if (img && img.alt && img.alt.length >= 3) {
-    scoreSum += 33;
-  } else {
-    messages.value.push('Das Bild sollte einen aussagekräftigen alt-Text haben.');
+  if (!img || !img.alt || img.alt.trim().length < 3) {
+    score -= 20;
+    messages.value.push(
+      `Das Bild hat keinen aussagekräftigen alt-Text. ` +
+      `Füge einen beschreibenden alt-Text hinzu, der den Inhalt des Bildes für Screenreader vermittelt.`
+    );
   }
 
   // Kontrast prüfen
-  const el = document.querySelector('p');
+  const el = document.getElementById('contrast-text');
   const style = getComputedStyle(el);
   const fg = style.color.match(/\d+/g).map(Number);
   const bg = style.backgroundColor.match(/\d+/g).map(Number);
   const ratio = contrast(fg, bg);
 
-  if (ratio >= 4.5) {
-    scoreSum += 34;
-  } else {
-    messages.value.push('Der Textkontrast ist zu niedrig. Zielwert: mindestens 4.5:1.');
+  if (ratio < 4.5) {
+    score -= 20;
+    messages.value.push(
+      `Der Text "Dieser Text ist schwer lesbar" hat zu wenig Kontrast (aktuell ${ratio.toFixed(2)}:1). ` +
+      `Verwende z. B. eine dunklere Schriftfarbe (#333) oder passe den Hintergrund an, um die Lesbarkeit zu verbessern.`
+    );
   }
 
-  props.setScore(scoreSum);
+  // Button mit Text oder aria-label prüfen
+  const button = document.getElementById('action-button');
+  const hasBtnText = button?.innerText.trim().length > 0;
+  const hasBtnAria = button?.getAttribute('aria-label');
+  if (!hasBtnText && !hasBtnAria) {
+    score -= 20;
+    messages.value.push(
+      `Der Button hat weder sichtbaren Text noch ein aria-label. ` +
+      `Füge entweder beschriftenden Text im Button ein oder verwende das Attribut aria-label, um die Funktion zugänglich zu machen.`
+    );
+  }
+
+  // Input mit Label oder aria-label prüfen
+  const input = document.querySelector('input');
+  const inputId = input?.id;
+  const label = inputId ? document.querySelector(`label[for="${inputId}"]`) : null;
+  const inputAria = input?.getAttribute('aria-label');
+  if (!label && !inputAria) {
+    score -= 20;
+    messages.value.push(
+      `Das Eingabefeld für die E-Mail ist nicht beschriftet. ` +
+      `Verknüpfe es entweder mit einem <label for="email"> oder verwende aria-label="E-Mail".`
+    );
+  }
+
+  props.setScore(Math.max(score, 0));
 }
 </script>
 
@@ -121,6 +161,9 @@ function checkFix() {
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .check-button {

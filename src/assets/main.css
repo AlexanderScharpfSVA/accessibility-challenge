@@ -1,2 +1,14 @@
 @import './base.css';
 
+.scenario-description {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  text-align: center;
+  max-width: 800px;
+  background-color: #e0f4fb; /* light shade of #0081c4 */
+  border-left: 4px solid #0081c4;
+  border-radius: 8px;
+  color: #003c5e;
+}
+

@@ -1,13 +1,22 @@
 <template>
   <div class="scenario-container">
-    <h2 class="scenario-title">Szenario 3: Farbkontrast</h2>
+    <h2 class="scenario-title">Szenario 3: Farbkontrast & Lesbarkeit</h2>
 
     <!-- Simulierte Webseite -->
     <div class="website-preview">
       <div class="webpage-frame">
-        <p style="color: lightgray; background: white">
+        <p class="scenario-description">
+          Sorge für ausreichend Farbkontrast, vermeide kleine Schriftgrößen und stelle sicher, dass Informationen nicht nur über Farben vermittelt werden.
+        </p>
+        <!-- DEINE VERÄNDERUNGEN VON HIER -->
+        <p id="contrast-text" style="color: lightgray; background: white">
           Dieser Text hat zu wenig Kontrast.
         </p>
+
+        <p id="color-only-text" style="color: red">Fehler</p>
+
+        <p id="small-text" style="font-size: 10px">Sehr kleiner Text</p>
+        <!-- BIS HIER -->
       </div>
     </div>
 
@@ -45,20 +54,45 @@ function contrast(rgb1, rgb2) {
 
 function checkFix() {
   messages.value = [];
+  let score = 100;
 
-  const el = document.querySelector('p');
+  // Farbkontrast
+  const el = document.getElementById('contrast-text');
   const style = getComputedStyle(el);
   const fg = style.color.match(/\d+/g).map(Number);
   const bg = style.backgroundColor.match(/\d+/g).map(Number);
-
   const ratio = contrast(fg, bg);
 
-  if (ratio >= 4.5) {
-    props.setScore(100);
-  } else {
-    props.setScore(40);
-    messages.value.push('Der Text hat nicht genügend Farbkontrast (Mindestwert: 4.5:1).');
+  if (ratio < 4.5) {
+    score -= 40;
+    messages.value.push(
+      `Der Text "Dieser Text hat zu wenig Kontrast" erfüllt nicht das Mindestkontrastverhältnis von 4.5:1 (aktuell ${ratio.toFixed(2)}:1). ` +
+      `Verwende z. B. eine dunklere Schriftfarbe wie #333 oder einen dunkleren Hintergrund, um die Lesbarkeit zu verbessern.`
+    );
   }
+
+  // Nur Farbe zur Bedeutung
+  const colorOnly = document.getElementById('color-only-text');
+  if (colorOnly?.innerText.trim().toLowerCase() === 'fehler') {
+    score -= 30;
+    messages.value.push(
+      `Die Meldung "Fehler" nutzt nur die Farbe Rot, um die Bedeutung zu vermitteln. ` +
+      `Füge ergänzend ein erklärendes Icon oder Text wie "Fehler: Ungültige Eingabe" hinzu, damit die Information auch bei Farbsehschwäche verständlich ist.`
+    );
+  }
+
+  // Kleine Schriftgröße
+  const smallText = document.getElementById('small-text');
+  const size = parseFloat(getComputedStyle(smallText).fontSize);
+  if (size < 12) {
+    score -= 30;
+    messages.value.push(
+      `Der Text "Sehr kleiner Text" verwendet eine zu kleine Schriftgröße (${size}px). ` +
+      `Verwende mindestens 12–14px oder besser skalierbare Einheiten wie \`rem\`, um die Lesbarkeit auf allen Geräten sicherzustellen.`
+    );
+  }
+
+  props.setScore(Math.max(score, 0));
 }
 </script>
 
@@ -90,6 +124,9 @@ function checkFix() {
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .check-button {

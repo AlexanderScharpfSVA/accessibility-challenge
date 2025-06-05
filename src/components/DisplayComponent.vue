@@ -1,7 +1,8 @@
+<!-- KEINE VERÄNDERUNGEN HIER-->
 <template>
   <div class="app-container">
     <header class="header">
-      <h1 class="title">Accessibility Challenge Suite</h1>
+      <h1 class="title">Barrierefreiheit Challenge</h1>
     </header>
 
     <nav class="nav-bar">
@@ -23,6 +24,12 @@
     </nav>
 
     <main class="main-content">
+       <div
+        v-if="allCompleted"
+        class="completion-message"
+      >
+        🎉 Glückwunsch! Du hast alle Szenarien erfolgreich abgeschlossen! 🎉
+      </div>
       <component
         :is="currentScenario.component"
         :score="scenarioScores[current]"
@@ -31,7 +38,7 @@
     </main>
 
     <footer class="footer">
-      Erstellt für den Accessibility Workshop
+      Barrierefreiheit Challenge
     </footer>
   </div>
 </template>
@@ -53,6 +60,10 @@ const scenarios = [
 const current = ref(0);
 const currentScenario = computed(() => scenarios[current.value]);
 const scenarioScores = ref([null, null, null, null]);
+
+const allCompleted = computed(() =>
+  scenarioScores.value.every(score => score === 100)
+);
 </script>
 
 <style scoped>
@@ -134,6 +145,18 @@ const scenarioScores = ref([null, null, null, null]);
   overflow-y: auto;
   padding: 24px;
   box-sizing: border-box;
+  position: relative;
+}
+
+.completion-message {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #e8f9e8;
+  border: 2px solid #45b645;
+  color: #2d7a2d;
+  font-size: 1.2em;
+  text-align: center;
+  border-radius: 6px;
 }
 
 .footer {
