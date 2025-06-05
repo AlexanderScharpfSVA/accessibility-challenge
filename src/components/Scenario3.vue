@@ -54,7 +54,7 @@ function contrast(rgb1, rgb2) {
 
 function checkFix() {
   messages.value = [];
-  let score = 100;
+  let score = 0;
 
   // Farbkontrast
   const el = document.getElementById('contrast-text');
@@ -64,35 +64,38 @@ function checkFix() {
   const ratio = contrast(fg, bg);
 
   if (ratio < 4.5) {
-    score -= 40;
     messages.value.push(
       `Der Text "Dieser Text hat zu wenig Kontrast" erfüllt nicht das Mindestkontrastverhältnis von 4.5:1 (aktuell ${ratio.toFixed(2)}:1). ` +
       `Verwende z. B. eine dunklere Schriftfarbe wie #333 oder einen dunkleren Hintergrund, um die Lesbarkeit zu verbessern.`
     );
+  } else {
+    score += 40;
   }
 
   // Nur Farbe zur Bedeutung
   const colorOnly = document.getElementById('color-only-text');
   if (colorOnly?.innerText.trim().toLowerCase() === 'fehler') {
-    score -= 30;
     messages.value.push(
       `Die Meldung "Fehler" nutzt nur die Farbe Rot, um die Bedeutung zu vermitteln. ` +
       `Füge ergänzend ein erklärendes Icon oder Text wie "Fehler: Ungültige Eingabe" hinzu, damit die Information auch bei Farbsehschwäche verständlich ist.`
     );
+  } else {
+    score += 30;
   }
 
   // Kleine Schriftgröße
   const smallText = document.getElementById('small-text');
   const size = parseFloat(getComputedStyle(smallText).fontSize);
   if (size < 12) {
-    score -= 30;
     messages.value.push(
       `Der Text "Sehr kleiner Text" verwendet eine zu kleine Schriftgröße (${size}px). ` +
       `Verwende mindestens 12–14px oder besser skalierbare Einheiten wie \`rem\`, um die Lesbarkeit auf allen Geräten sicherzustellen.`
     );
+  } else {
+    score += 30;
   }
 
-  props.setScore(Math.max(score, 0));
+  props.setScore(score);
 }
 </script>
 
