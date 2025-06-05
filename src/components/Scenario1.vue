@@ -62,17 +62,23 @@ function checkFix() {
   messages.value = [];
   let scoreVal = 0;
 
-  const header = document.querySelector('header');
-  const main = document.querySelector('main');
-  const footer = document.querySelector('footer');
-  const nav = document.querySelector('nav');
+  const exampleRoot = document.getElementById('example-root');
+  if (!exampleRoot) {
+    props.setScore(0);
+    messages.value.push('Fehler: Der Übungsbereich (#example-root) konnte nicht gefunden werden.');
+    return;
+  }
+
+  const header = exampleRoot.querySelector('header');
+  const main = exampleRoot.querySelector('main');
+  const footer = exampleRoot.querySelector('footer');
+  const nav = exampleRoot.querySelector('nav');
 
   if (header) {
     scoreVal += 10;
   } else {
     messages.value.push(
-      'Der obere Seitenbereich sollte mit einem <header>-Element ausgezeichnet werden, um den Anfang der Seite semantisch zu kennzeichnen. ' +
-      'Beispiel: <header><h1>Meine Webseite</h1></header>'
+      'Der obere Seitenbereich sollte mit einem <header>-Element ausgezeichnet werden, um den Anfang der Seite semantisch zu kennzeichnen. '
     );
   }
 
@@ -80,8 +86,7 @@ function checkFix() {
     scoreVal += 10;
   } else {
     messages.value.push(
-      'Der Hauptinhalt der Seite gehört in ein <main>-Element, um Screenreadern und Browsern die Struktur klar zu machen. ' +
-      'Beispiel: <main><section>...</section></main>'
+      'Der Hauptinhalt der Seite gehört in ein <main>-Element, um Screenreadern und Browsern die Struktur klar zu machen. '
     );
   }
 
@@ -97,13 +102,12 @@ function checkFix() {
     scoreVal += 10;
   } else {
     messages.value.push(
-      'Die Navigationslinks sollten in einem <nav>-Element gruppiert werden, damit assistive Technologien sie als Navigation erkennen. ' +
-      'Beispiel: <nav><ul><li>Start</li>...</ul></nav>'
+      'Die Navigationslinks sollten in einem <nav>-Element gruppiert werden, damit assistive Technologien sie als Navigation erkennen. '
     );
   }
 
   // Überschriften-Hierarchie
-  const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+  const headings = Array.from(exampleRoot.querySelectorAll('h1, h2, h3, h4, h5, h6'));
   let lastLevel = 0;
   let validHeadingOrder = true;
   headings.forEach(h => {
@@ -122,7 +126,7 @@ function checkFix() {
   }
 
   // h1 Check
-  const h1s = document.querySelectorAll('h1');
+  const h1s = exampleRoot.querySelectorAll('h1');
   if (h1s.length >= 1) {
     scoreVal += 10;
   } else {
@@ -133,8 +137,8 @@ function checkFix() {
 
 
   // Section oder Article
-  const hasSection = !!document.querySelector('section');
-  const hasArticle = !!document.querySelector('article');
+  const hasSection = !!exampleRoot.querySelector('section');
+  const hasArticle = !!exampleRoot.querySelector('article');
   if (hasSection || hasArticle) {
     scoreVal += 10;
   } else {
@@ -145,7 +149,7 @@ function checkFix() {
   }
 
   // Übermäßige <div>-Verwendung
-  const nonSemanticDivs = document.querySelectorAll('#example-root > div');
+  const nonSemanticDivs = exampleRoot.querySelectorAll('#example-root > div');
   if (nonSemanticDivs.length > 0) {
     messages.value.push(
       'Es wurden generische <div>-Container für Inhaltsbereiche verwendet. Ersetze sie durch semantische Elemente wie <header>, <section>, <nav> oder <footer>, ' +
