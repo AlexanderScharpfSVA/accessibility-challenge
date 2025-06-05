@@ -5,10 +5,12 @@
     <!-- Simulierte Webseite-->
     <div class="website-preview">
       <div id="example-root" class="webpage-frame">
-         <p class="scenario-description">
+        <p class="scenario-description">
           Verbessere die semantische HTML-Struktur dieser Webseite, indem du passende Elemente wie
-          &ltheader&gt, &ltmain&gt, &ltsection&gt, &ltnav&gt oder &ltfooter&gt verwendest. Achte außerdem auf die korrekte Verwendung von Überschriften und Landmarken.
-          Die rot umrandeten Bereiche markieren Stellen, an denen semantische HTML-Elemente fehlen oder verbessert werden sollten.
+          &ltheader&gt, &ltmain&gt, &ltsection&gt, &ltnav&gt oder &ltfooter&gt verwendest. Achte außerdem auf die
+          korrekte Verwendung von Überschriften und Landmarken.
+          Die rot umrandeten Bereiche markieren Stellen, an denen semantische HTML-Elemente fehlen oder verbessert
+          werden sollten.
         </p>
         <!-- DEINE VERÄNDERUNGEN VON HIER -->
         <div class="non-semantic">
@@ -121,19 +123,16 @@ function checkFix() {
 
   // h1 Check
   const h1s = document.querySelectorAll('h1');
-  if (h1s.length === 1) {
+  if (h1s.length >= 1) {
     scoreVal += 10;
-  } else if (h1s.length === 0) {
+  } else {
     messages.value.push(
       'Ein <h1>-Element für den Haupttitel der Seite fehlt. Es dient als wichtigste Überschrift und sollte nur einmal vorkommen.'
     );
-  } else {
-    messages.value.push(
-      'Mehrere <h1>-Elemente gefunden. Verwende nur ein <h1> pro Seite, um die Hauptüberschrift eindeutig zu machen.'
-    );
   }
 
-  // Section or Article
+
+  // Section oder Article
   const hasSection = !!document.querySelector('section');
   const hasArticle = !!document.querySelector('article');
   if (hasSection || hasArticle) {
