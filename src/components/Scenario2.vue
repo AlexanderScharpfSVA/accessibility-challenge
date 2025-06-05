@@ -82,7 +82,7 @@ function checkFix() {
       buttonsValid = false;
     }
   });
-  if (buttonsValid) result += 15;
+  if (buttonsValid) result += 20;
 
   // 3. input mit label oder aria-label
   const inputs = document.querySelectorAll('input');
@@ -99,7 +99,7 @@ function checkFix() {
       inputsValid = false;
     }
   });
-  if (inputsValid) result += 15;
+  if (inputsValid) result += 20;
 
   // Textareas mit label or aria-label
   const textareas = document.querySelectorAll('textarea');
@@ -116,7 +116,7 @@ function checkFix() {
       textareasValid = false;
     }
   });
-  if (textareasValid && textareas.length > 0) result += 10;
+  if (textareasValid && textareas.length > 0) result += 15;
 
   // 5. Select mit label or aria-label
   const selects = document.querySelectorAll('select');
@@ -133,7 +133,7 @@ function checkFix() {
       selectsValid = false;
     }
   });
-  if (selectsValid && selects.length > 0) result += 10;
+  if (selectsValid && selects.length > 0) result += 15;
 
   // 6. Interaktive icons mit Rolle
   const interactiveIcons = document.querySelectorAll('[role="button"], [role="link"]');
@@ -150,7 +150,7 @@ function checkFix() {
       iconsValid = false;
     }
   });
-  if (iconsValid && interactiveIcons.length > 0) result += 10;
+  if (iconsValid && interactiveIcons.length > 0) result += 15;
 
   props.setScore(result);
 }
