@@ -113,7 +113,7 @@ function checkFix() {
   });
 
   if (validHeadingOrder && headings.length > 0) {
-    scoreVal += 10;
+    scoreVal += 20;
   } else {
     messages.value.push(
       'Die Überschriften sollten in sinnvoller Reihenfolge verwendet werden (z. B. h1 > h2 > h3). ' +
@@ -152,7 +152,7 @@ function checkFix() {
       'um die Struktur der Seite verständlicher zu machen.'
     );
   } else {
-    scoreVal += 10;
+    scoreVal += 20;
   }
 
   props.setScore(scoreVal);
